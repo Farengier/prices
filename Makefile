@@ -1,5 +1,7 @@
 build:
-	@go build -o build/db src/cli/database.go
+	@go build -o build/prices src/cli/prices.go
 
-run_db: build
-	@build/db -c example/config.yml
+run: build
+	@build/prices -c example/config.yml
+
+.PHONY: build
