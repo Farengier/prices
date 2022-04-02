@@ -1,7 +1,7 @@
 build:
-	@go build -o build/prices src/cli/prices.go
+	go build -o build/prices src/cli/prices.go
 
-run: build
-	@build/prices -c example/config.yml
+run:
+	build/prices -c example/config.yml
 
-.PHONY: build
+.PHONY: build run

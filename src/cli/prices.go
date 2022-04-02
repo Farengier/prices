@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/Farengier/gotools/logging"
 	"github.com/Farengier/gotools/routine"
+	db2 "github.com/Farengier/prices/src/pkg/db"
+	"github.com/Farengier/prices/src/pkg/renderer"
 	"github.com/Farengier/prices/src/pkg/server"
 	"github.com/jessevdk/go-flags"
 	"github.com/rs/zerolog"
@@ -23,6 +25,11 @@ type cfg struct {
 		File  string `yaml:"file"`
 	} `yaml:"log"`
 	ServerConfig `yaml:"server"`
+	DataBase     string `yaml:"db"`
+}
+
+func (c cfg) Path() string {
+	return c.DataBase
 }
 
 type ServerConfig struct {
@@ -38,7 +45,14 @@ func main() {
 	opts := initOpts()
 	conf := readConf(opts.Config)
 	log := configLogger(conf)
-	srv := server.Server{Log: log, Cfg: conf.ServerConfig}
+
+	db, err := db2.DB(log, conf)
+	if err != nil {
+		return
+	}
+
+	t := renderer.Template()
+	srv := server.Server(log, conf.ServerConfig, db, t)
 	srv.Start()
 
 	routine.WaitForExit()

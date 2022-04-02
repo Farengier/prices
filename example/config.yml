@@ -3,3 +3,4 @@ log:
 #  file: example/log.log
 server:
   listen: "0.0.0.0:8080"
+db: example/db.sqlite
